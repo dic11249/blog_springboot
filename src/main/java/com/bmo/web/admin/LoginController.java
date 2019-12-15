@@ -20,7 +20,8 @@ public class LoginController {
 
 	@Autowired UserService userSvc;
 	
-	@GetMapping
+	
+	@GetMapping("/login")
 	public String loginPage() {
 		return "admin/login";
 	}
@@ -31,12 +32,11 @@ public class LoginController {
 						HttpSession session,
 						RedirectAttributes attributes) {
 
-
 		User user = userSvc.checkUser(username, MD5Utils.code(password));
 		if(user != null) {
 			user.setPassword(null);
 			session.setAttribute("user", user);
-			return "admin/index";
+			return "redirect:/admin/index";
 		} else {
 			attributes.addFlashAttribute("message", "帳號或密碼錯誤");
 			return "redirect:/admin";

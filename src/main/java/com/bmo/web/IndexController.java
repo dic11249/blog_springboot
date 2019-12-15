@@ -12,12 +12,11 @@ import javassist.NotFoundException;
  *
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/admin")
 public class IndexController {
 
-	@GetMapping
+	@GetMapping("/index")
 	public String index() {
-		System.out.println("-----index-----");
-		return "admin/login";
+		return "admin/index";
 	}
 }
