@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author Bmo  2019-12-10  
@@ -20,6 +21,7 @@ public class Type {
 	@Id
 	@GeneratedValue
 	private Long id;
+	@NotBlank(message = "分類名稱不能為空")
 	private String name;
 	
 	@OneToMany(mappedBy = "type")

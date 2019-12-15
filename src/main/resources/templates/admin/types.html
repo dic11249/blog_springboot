@@ -37,52 +37,42 @@
 		<!-- Breadcrumbs-->
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="#">文章管理</a>
+            <a href="#">分類管理</a>
           </li>
-          <li class="breadcrumb-item active">文章列表</li>
+          <li class="breadcrumb-item active">分類列表</li>
         </ol>
+        
+        <div class="text-center mt-3 alert alert-danger alert-dismissible fade show" role="alert" th:unless="${#strings.isEmpty(message)}">
+	    	<strong th:text="${message}">該分類名稱已存在!</strong>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+	    </div>
         
         <table class="table">
 		  <thead class="thead-dark">
 		    <tr>
-		      <th scope="col">#</th>
-		      <th scope="col">標題</th>
-		      <th scope="col">類型</th>
-		      <th scope="col">推薦</th>
-		      <th scope="col">更新時間</th>
-		      <th scope="col">操作</th>
+		      <th scope="col" width="20%">#</th>
+		      <th scope="col" width="30%">分類名稱</th>
+		      <th scope="col" width="30%">操作</th>
+		      <th scope="col" width="20%"><a href="#" th:href="@{/admin/types/input}" class="btn btn-success float-right">新增分類</a></th>
 		    </tr>
 		  </thead>
 		  <tbody>
-		    <tr>
-		      <th scope="row">1</th>
-		      <td>現代PHP</td>
-		      <td>PHP</td>
-		      <td>是</td>
-		      <td>2019-12-11</td>
-		      <td><button type="button" class="btn btn-primary">編輯</button><button type="button" class="btn btn-danger">刪除</button></td>
-		    </tr>
-		    <tr>
-		      <th scope="row">2</th>
-		      <td>現代PHP</td>
-		      <td>PHP</td>
-		      <td>是</td>
-		      <td>2019-12-11</td>
-		      <td><button type="button" class="btn btn-primary">編輯</button><button type="button" class="btn btn-danger">刪除</button></td>
-		    </tr>
-		    <tr>
-		      <th scope="row">3</th>
-		      <td>現代PHP</td>
-		      <td>PHP</td>
-		      <td>是</td>
-		      <td>2019-12-11</td>
-		      <td><button type="button" class="btn btn-primary">編輯</button><button type="button" class="btn btn-danger">刪除</button></td>
+		    <tr th:each="type, iterStat : ${page.content}">
+		      <th scope="row" th:text="${iterStat.count}">1</th>
+		      <td th:text="${type.name}">PHP</td>
+		      <td>
+		      	<a href="#" th:href="@{/admin/types/{id}/input(id=${type.id})}" class="btn btn-primary">編輯</a>
+		      	<a href="#" th:href="@{/admin/types/{id}/delete(id=${type.id})}" class="btn btn-danger">刪除</a>
+		      </td>
+		      <td>
 		    </tr>
 		  </tbody>
 		</table>
-		<ul class="pagination justify-content-center" style="margin:20px 0">
-		  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-		  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+		<ul class="pagination justify-content-center" style="margin:20px 0" th:if="${page.totalPages}>1">
+		  <li class="page-item"><a class="page-link" href="#" th:href="@{/admin/types(page=${page.number}-1)}" th:unless="${page.first}">Previous</a></li>
+		  <li class="page-item"><a class="page-link" href="#" th:href="@{/admin/types(page=${page.number}+1)}" th:unless="${page.last}">Next</a></li>
 		</ul>
       </div>
       <!-- /.container-fluid -->
