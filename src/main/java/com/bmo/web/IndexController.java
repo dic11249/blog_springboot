@@ -17,6 +17,6 @@ public class IndexController {
 
 	@GetMapping("/index")
 	public String index() {
-		return "admin/index";
+		return "admin/post";
 	}
 }
