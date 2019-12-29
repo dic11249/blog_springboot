@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>管理頁面</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="../../static/admin/vendor/fontawesome-free/css/all.min.css" th:href="@{/admin/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+
+  <!-- Page level plugin CSS-->
+  <link href="../../static/admin/vendor/datatables/dataTables.bootstrap4.css" th:href="@{/admin/vendor/datatables/dataTables.bootstrap4.css}" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="../../static/admin/css/sb-admin.css" th:href="@{/admin/css/sb-admin.css}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <nav th:replace="/admin/layouts/nav :: nav"></nav>
+
+  <div id="wrapper">
+
+    <ul th:replace="/admin/layouts/sidebar :: sidebar"></ul>
+
+    <div id="content-wrapper">
+	  
+      <div class="container-fluid">
+      
+		<!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">文章管理</a>
+          </li>
+          <li class="breadcrumb-item active">文章列表</li>
+        </ol>
+        <div>
+          <input type="hidden" name="page">
+		  <div class="form-row">
+		    <div class="form-group col-md-5">
+		      <input type="text" name="title" class="form-control" id="inputCity" placeholder="輸入標題...">
+		    </div>
+		    <div class="form-group col-md-4">
+		      
+		      <select id="inputState" name="typeId" class="form-control">
+		      	<option value="">Choose...</option>
+		        <option th:each="type : ${types}" data-value="1" th:value="${type.id}" th:text="${type.name}">Choose...</option>
+		      </select>
+		    </div>
+		    <div class="form-group col-md-1">
+		      <div class="form-group">
+			    <div class="form-check">
+			      <input class="form-check-input" name="recommend" type="checkbox" id="gridCheck">
+			      <label class="form-check-label" for="gridCheck">
+			       推薦
+			      </label>
+			    </div>
+			  </div>
+		    </div>
+		    <div class="form-group col-md-2">
+		      <button type="button" id="search-btn" class="btn btn-primary">Search</button>
+		    </div>
+		    	
+		  </div>
+        </div>
+        <div id="table-container" th:fragment="postList">
+        	<div class="text-center mt-3 alert alert-danger alert-dismissible fade show" role="alert" th:unless="${#strings.isEmpty(message)}">
+		    	<strong th:text="${message}">該分類名稱已存在!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				
+	    	</div>
+	        <table class="table">
+			  <thead class="thead-dark">
+			    <tr>
+			      <th scope="col">#</th>
+			      <th scope="col">標題</th>
+			      <th scope="col">類型</th>
+			      <th scope="col">推薦</th>
+			      <th scope="col">文章狀態</th>
+			      <th scope="col">更新時間</th>
+			      <th scope="col">操作</th>		
+			      <th scope="col"><a href="#" th:href="@{/admin/posts/input}" class="btn btn-success float-right">新增文章</a>	</th>	   		      
+			    </tr>
+			  </thead>
+			  <tbody>
+			    <tr th:each="post,iterStat : ${page.content}">
+			      <th scope="row" th:text="${iterStat.count}">1</th>
+			      <td th:text="${post.title}">現代PHP</td>
+			      <td th:text="${post.type.name}">PHP</td>
+			      <td th:text="${post.recommend} ? '是':'否' ">是</td>
+			      <td th:text="${post.published} ? '發布':'草稿' ">是</td>
+			      <td th:text="${post.updateTime}">2019-12-11</td>
+			      <td>
+			      	<a href="#" th:href="@{/admin/posts/{id}/input(id=${post.id})}" class="btn btn-primary">編輯</a>
+			      	<a href="#" th:href="@{/admin/posts/{id}/delete(id=${post.id})}" class="btn btn-danger">刪除</a>
+			      </td>
+			      <td>&nbsp;</td>
+			    </tr>
+			  </tbody>
+			</table>
+		  <ul class="pagination justify-content-center" style="margin:20px 0" th:if="${page.totalPages}>1">
+		  	<li class="page-item"><a class="page-link" onclick="page(this)" th:attr="data-page=${page.number}-1" th:unless="${page.first}">Previous</a></li>
+		  	<li class="page-item"><a class="page-link" onclick="page(this)" th:attr="data-page=${page.number}+1" th:unless="${page.last}">Next</a></li>
+		  </ul>
+		</div>
+
+      </div>
+      <!-- /.container-fluid -->
+
+      <!-- Sticky Footer -->
+      <div th:replace="/admin/layouts/footer :: copy"></div>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <div th:replace="/admin/layouts/logoutModal :: logoutModal"></div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="../../static/admin/vendor/jquery/jquery.min.js" th:src="@{/admin/vendor/jquery/jquery.min.js}"></script>
+  <script src="../../static/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" th:src="@{/admin/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="../../static/admin/vendor/jquery-easing/jquery.easing.min.js" th:src="@{/admin/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+  <!-- Page level plugin JavaScript-->
+  <script src="../../static/admin/vendor/chart.js/Chart.min.js" th:src="@{/admin/vendor/chart.js/Chart.min.js}"></script>
+  <script src="../../static/admin/vendor/datatables/jquery.dataTables.js" th:src="@{/admin/vendor/datatables/jquery.dataTables.js}"></script>
+  <script src="../../static/admin/vendor/datatables/dataTables.bootstrap4.js" th:src="@{/admin/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="../../static/admin/js/sb-admin.min.js" th:src="@{/admin/js/sb-admin.min.js}"></script>
+
+  <!-- Demo scripts for this page-->
+  <script src="../../static/admin/js/demo/datatables-demo.js" th:src="@{/admin/js/demo/datatables-demo.js}"></script>
+  <script src="../../static/admin/js/demo/chart-area-demo.js" th:src="@{/admin/js/demo/chart-area-demo.js}"></script>
+
+
+  <script type="text/javascript">
+  	function page(obj) {
+  		$("[name='page']").val($(obj).data("page"));
+  		loaddata();
+  	}
+  	
+  	$("#search-btn").click(function(){
+  		$("[name='page']").val(0);
+  		loaddata();
+  	})
+  	
+  	function loaddata() {
+  		$("#table-container").load(/*[[@{/admin/posts/search}]]*/"/admin/posts/search",{
+  			title : $("[name='title']").val(),
+  			typeId : $("[name='typeId']").val(),
+  			recommend : $("[name='recommend']").prop('checked'),
+  			page : $("[name='page']").val()
+  		});
+  	}
+  
+  
+  </script>
+</body>
+
+</html>

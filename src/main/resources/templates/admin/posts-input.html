@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>管理頁面</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="../../static/admin/vendor/fontawesome-free/css/all.min.css" th:href="@{/admin/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+
+  <!-- Page level plugin CSS-->
+  <link href="../../static/admin/vendor/datatables/dataTables.bootstrap4.css" th:href="@{/admin/vendor/datatables/dataTables.bootstrap4.css}" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="../../static/admin/css/sb-admin.css" th:href="@{/admin/css/sb-admin.css}" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <nav th:replace="/admin/layouts/nav :: nav"></nav>
+
+  <div id="wrapper">
+
+    <ul th:replace="/admin/layouts/sidebar :: sidebar"></ul>
+
+    <div id="content-wrapper">
+	  
+      <div class="container-fluid">
+      
+		<!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">文章管理</a>
+          </li>
+          <li class="breadcrumb-item active">文章列表</li>
+        </ol>
+
+          <form id="post-form" th:object="${post}" action="#" th:action="@{/admin/posts}" method="post">
+              <input type="hidden" name="id" th:value="*{id}">
+          	  <input type="hidden" name="published" >
+			  <div class="form-group row">
+			    <label for="title" class="col-sm-2 col-form-label">標題</label>
+			    <div class="col-sm-10">
+			      <input name="title" type="text" class="form-control" id="title" placeholder="Title" th:value="*{title}">
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <label for="type" class="col-sm-2 col-form-label">分類</label>
+			    <div class="col-sm-10">
+			      <input type="hidden" name="type.id" th:value="*{type}!=null ? *{type.id}">
+			      <select id="inputState" name="type.id" class="form-control">			        
+			      	<option th:each="type : ${types}" data-value="1" th:value="${type.id}" th:text="${type.name}">Choose...</option>
+<!-- 			        <option th:each="type : ${types}" data-value="1" th:value="${type.id}" th:text="${type.name}">Choose...</option> -->
+			      </select>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <label for="content" class="col-sm-2 col-form-label">內容</label>
+			    <div class="col-sm-10">
+			      <textarea name="content" class="form-control" id="content" placeholder="ContentPassword" th:text="*{content}"></textarea>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <label for="firstPicture" class="col-sm-2 col-form-label">圖片</label>
+			    <div class="col-sm-10">
+			      <input name="firstPicture" type="text" class="form-control" id="firstPicture" placeholder="FirstPicture" th:value="*{firstPicture}">
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <div class="col-sm-2">推薦</div>
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input name="recommend" class="form-check-input" type="checkbox" id="recommend" th:checked="*{recommend}">
+			        <label class="form-check-label" for="recommend">
+			          	推薦
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <div class="col-sm-2">轉載聲明</div>
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input name="shareStatement" class="form-check-input" type="checkbox" id="shareStatement" th:checked="shareStatement">
+			        <label class="form-check-label" for="shareStatement">
+			          	轉載聲明
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <div class="col-sm-2">讚賞</div>
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input name="appreciation" class="form-check-input" type="checkbox" id="appreciation" th:checked="*{appreciation}">
+			        <label class="form-check-label" for="appreciation">
+			          	讚賞
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			    <div class="col-sm-2">評論</div>
+			    <div class="col-sm-10">
+			      <div class="form-check">
+			        <input name="commentabled" class="form-check-input" type="checkbox" id="commentabled" th:checked="*{commentabled}">
+			        <label class="form-check-label" for="commentabled">
+			          	開啟評論
+			        </label>
+			      </div>
+			    </div>
+			  </div>
+			  
+			  <div class="form-group row">
+			  	<div class="col-sm-9"></div>
+			  	<div class="col-sm-3">
+			      <button type="button" class="btn btn-light mr-2" onclick="window.history.go(-1)">返回</button>
+			      <button type="button" id="save-btn" class="btn btn-warning mr-2">暫存</button>
+			      <button type="button" id="publish-btn" class="btn btn-success">發布</button>
+			     </div>
+			  </div>
+			  
+		  </form>
+<!-- 		<ul class="pagination justify-content-center" style="margin:20px 0" th:if="${page.totalPages}>1"> -->
+<!-- 		  <li class="page-item"><a class="page-link" onclick="page(this)" th:attr="data-page=${page.number}-1" th:unless="${page.first}">Previous</a></li> -->
+<!-- 		  <li class="page-item"><a class="page-link" onclick="page(this)" th:attr="data-page=${page.number}+1" th:unless="${page.last}">Next</a></li> -->
+<!-- 		</ul> -->
+      </div>
+      <!-- /.container-fluid -->
+
+      <!-- Sticky Footer -->
+      <div th:replace="/admin/layouts/footer :: copy"></div>
+
+    </div>
+    <!-- /.content-wrapper -->
+
+  </div>
+  <!-- /#wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <div th:replace="/admin/layouts/logoutModal :: logoutModal"></div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="../../static/admin/vendor/jquery/jquery.min.js" th:src="@{/admin/vendor/jquery/jquery.min.js}"></script>
+  <script src="../../static/admin/vendor/bootstrap/js/bootstrap.bundle.min.js" th:src="@{/admin/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="../../static/admin/vendor/jquery-easing/jquery.easing.min.js" th:src="@{/admin/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+  <!-- Page level plugin JavaScript-->
+  <script src="../../static/admin/vendor/chart.js/Chart.min.js" th:src="@{/admin/vendor/chart.js/Chart.min.js}"></script>
+  <script src="../../static/admin/vendor/datatables/jquery.dataTables.js" th:src="@{/admin/vendor/datatables/jquery.dataTables.js}"></script>
+  <script src="../../static/admin/vendor/datatables/dataTables.bootstrap4.js" th:src="@{/admin/vendor/datatables/dataTables.bootstrap4.js}"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="../../static/admin/js/sb-admin.min.js" th:src="@{/admin/js/sb-admin.min.js}"></script>
+
+  <!-- Demo scripts for this page-->
+  <script src="../../static/admin/js/demo/datatables-demo.js" th:src="@{/admin/js/demo/datatables-demo.js}"></script>
+  <script src="../../static/admin/js/demo/chart-area-demo.js" th:src="@{/admin/js/demo/chart-area-demo.js}"></script>
+
+
+  <script type="text/javascript">
+  	function page(obj) {
+  		$("[name='page']").val($(obj).data("page"));
+  		loaddata();
+  	}
+  	
+  	$("#search-btn").click(function(){
+  		loaddata();
+  	})
+  	
+  	function loaddata() {
+  		$("#table-container").load(/*[[@{/admin/posts/search}]]*/"/admin/posts/search",{
+  			title : $("[name='title']").val(),
+  			typeId : $("[name='typeId']").val(),
+  			recommend : $("[name='recommend']").prop('checked'),
+  			page : $("[name='page']").val()
+  		});
+  	}
+  	
+  	$('#save-btn').click(function () {
+  		$('[name="published"]').val(false);
+  		$('#post-form').submit();
+  	});
+  	
+  	$('#publish-btn').click(function () {
+  		$('[name="published"]').val(true);
+  		$('#post-form').submit();
+  	});
+  
+  
+  </script>
+</body>
+
+</html>
