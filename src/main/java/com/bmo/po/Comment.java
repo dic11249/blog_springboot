@@ -34,11 +34,11 @@ public class Comment {
 	@ManyToOne
 	private Post post;
 	
-	@OneToMany(mappedBy = "parenComment")
+	@OneToMany(mappedBy = "parentComment")
 	private List<Comment> replyComments = new ArrayList<Comment>();
 	
 	@ManyToOne
-	private Comment parenComment;
+	private Comment parentComment;
 	
 	public Comment() {
 		super();
@@ -109,12 +109,12 @@ public class Comment {
 		this.replyComments = replyComments;
 	}
 
-	public Comment getParenComment() {
-		return parenComment;
+	public Comment getParentComment() {
+		return parentComment;
 	}
 
-	public void setParenComment(Comment parenComment) {
-		this.parenComment = parenComment;
+	public void setParentComment(Comment parentComment) {
+		this.parentComment = parentComment;
 	}
 
 	@Override

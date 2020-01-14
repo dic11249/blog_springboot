@@ -7,6 +7,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.bmo.service.CommentService;
 import com.bmo.service.PostService;
 import com.bmo.service.TypeService;
 
@@ -23,6 +26,9 @@ public class IndexController {
 	
 	@Autowired 
 	TypeService typeService;
+	
+	@Autowired
+	CommentService commentService;
 
 	@GetMapping("/")
 	public String index(@PageableDefault(size = 5, sort= {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
@@ -32,5 +38,13 @@ public class IndexController {
 		model.addAttribute("types", typeService.listTypeTop(6));
 		model.addAttribute("recommends", postService.listRecommendPostTop(6));
 		return "blog/index";
+	}
+	
+	@GetMapping("/posts/{id}")
+	public String post(@PathVariable Long id, Model model) {
+		model.addAttribute("post", postService.getPost(id));
+		model.addAttribute("comments", commentService.listByPostId(id));
+		System.out.println(commentService.listByPostId(id).size());
+		return "blog/post";
 	}
 }
