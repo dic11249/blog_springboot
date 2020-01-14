@@ -57,7 +57,7 @@
 			    <div class="col-sm-10">
 			      <input type="hidden" name="type.id" th:value="*{type}!=null ? *{type.id}">
 			      <select id="inputState" name="type.id" class="form-control">			        
-			      	<option th:each="type : ${types}" data-value="1" th:value="${type.id}" th:text="${type.name}">Choose...</option>
+			      	<option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}" th:selected="${type.id eq post.type.id}">Choose...</option>
 <!-- 			        <option th:each="type : ${types}" data-value="1" th:value="${type.id}" th:text="${type.name}">Choose...</option> -->
 			      </select>
 			    </div>
